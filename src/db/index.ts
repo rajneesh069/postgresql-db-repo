@@ -86,3 +86,21 @@ async function getUser(email: string) {
 }
 
 // getUser("rajneesh@gmail.com");
+
+// UPDATE OPERATION
+async function updateUserPassword(email: string, newPassword: string) {
+  try {
+    await client.connect();
+    const updateQuery = "UPDATE users SET password=$1 WHERE email=$2";
+    const values = [newPassword, email];
+    const res = await client.query(updateQuery, values);
+    console.log("Update result:", res);
+  } catch (error) {
+    console.error("Error occurred:", error);
+  } finally {
+    await client.end();
+  }
+}
+
+// Example usage:
+// updateUserPassword("rajneesh@gmail.com", "newpassword123");
