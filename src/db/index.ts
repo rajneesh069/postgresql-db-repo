@@ -1,14 +1,21 @@
 import pg from "pg";
 const { Client } = pg;
 
-async function createUsersTable() {
-  const client = new Client({
-    connectionString: "postgresql://postgres:12345@localhost/postgres",
-  });
+//CREATE CLIENT
+const client = new Client({
+  host: "localhost",
+  port: 5432,
+  database: "postgres",
+  user: "postgres",
+  password: "12345",
+});
 
+// CREATE TABLE OPERATION
+async function createUsersTable() {
   try {
+    await client.end();
     await client.connect(); // Handle connection errors
-    const result = await client.query(`
+    const users = await client.query(`
       CREATE TABLE IF NOT EXISTS users (
           id SERIAL PRIMARY KEY,
           username VARCHAR(50) UNIQUE NOT NULL,
@@ -17,7 +24,21 @@ async function createUsersTable() {
           created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       )
     `); // Handle SQL query execution errors
-    console.log(result);
+
+    const address = await client.query(`
+      CREATE TABLE IF NOT EXISTS addresses(
+      id SERIAL PRIMARY KEY,
+      user_id INTEGER NOT NULL,
+      city VARCHAR(100) NOT NULL,
+      country VARCHAR(100) NOT NULL,
+      street VARCHAR(255) NOT NULL,
+      pincode VARCHAR(20) NOT NULL,
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      FOREIGN KEY  (user_id) REFERENCES users(id) ON DELETE CASCADE  
+      )
+      `);
+    console.log(users);
+    console.log(address);
   } catch (error) {
     console.error("Error occurred:", error);
   } finally {
@@ -27,19 +48,8 @@ async function createUsersTable() {
 
 createUsersTable();
 
-async function insertIntoUsersTable(
-  email: string,
-  username: string,
-  password: string
-) {
-  const client = new Client({
-    host: "localhost",
-    port: 5432,
-    database: "postgres",
-    user: "postgres",
-    password: "12345",
-  });
-
+//INSERT DATA OPERATION
+async function insertUser(email: string, username: string, password: string) {
   try {
     await client.connect();
     const insertQuery =
@@ -54,4 +64,26 @@ async function insertIntoUsersTable(
   }
 }
 
-insertIntoUsersTable("rajneesh@gmail.com", "rajneesh", "123456");
+// insertUser("rajneesh@gmail.com", "rajneesh", "123456");
+
+//READ OPERATION
+async function getUser(email: string) {
+  try {
+    await client.connect();
+    const searchQuery = "SELECT * FROM users WHERE email=$1";
+    const result = await client.query(searchQuery, [email]);
+    if (result.rows.length > 0) {
+      console.log("User found:", result.rows[0]);
+      return result.rows[0];
+    } else {
+      console.log("No user with input email was found.");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error occured:", error);
+  } finally {
+    await client.end();
+  }
+}
+
+getUser("rajneesh@gmail.com");
