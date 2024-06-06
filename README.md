@@ -56,3 +56,20 @@ const { namedExport } = require("someCommonJSModule");
 import exportedCommonJSModule from "someCommonJSModule";
 const { namedExport } = exportedCommonJSModule;
 ```
+
+In case of default export from a `commonjs` module, following approaches could be used:
+
+##### Proper options in `package.json` and `tsconfig.json` files need to be set.
+
+#### Approach 1:
+
+```js
+const defaultExport = require("./someCommonJSModule");
+```
+
+#### Approach 2:
+
+```js
+import exportedModule from "./someCommonJSModule";
+const defaultExport = exportedModule.default;
+```
