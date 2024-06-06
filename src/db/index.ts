@@ -13,7 +13,6 @@ const client = new Client({
 // CREATE TABLE OPERATION
 async function createUsersTable() {
   try {
-    await client.end();
     await client.connect(); // Handle connection errors
     const users = await client.query(`
       CREATE TABLE IF NOT EXISTS users (
@@ -33,8 +32,8 @@ async function createUsersTable() {
       country VARCHAR(100) NOT NULL,
       street VARCHAR(255) NOT NULL,
       pincode VARCHAR(20) NOT NULL,
-      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-      FOREIGN KEY  (user_id) REFERENCES users(id) ON DELETE CASCADE  
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE  
       )
       `);
     console.log(users);
@@ -86,4 +85,4 @@ async function getUser(email: string) {
   }
 }
 
-getUser("rajneesh@gmail.com");
+// getUser("rajneesh@gmail.com");
