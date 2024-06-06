@@ -13,8 +13,8 @@
     "sourceMap": true,                            // Generate source maps for easier debugging
     "allowSyntheticDefaultImports": true,         // Allow default imports from modules with no default export
     "noImplicitAny": true,                        // Raise error on expressions and declarations with an implied 'any' type
-    // "noUnusedLocals": true,                       // Report errors on unused locals
-    // "noUnusedParameters": true,                   // Report errors on unused parameters
+    // "noUnusedLocals": true,                    // Report errors on unused locals
+    // "noUnusedParameters": true,                // Report errors on unused parameters
     "noFallthroughCasesInSwitch": true,           // Report errors for fallthrough cases in switch statements
     "noImplicitReturns": true,                    // Report errors for functions that have inconsistent return behavior
     "typeRoots": ["./node_modules/@types"],       // Type declaration files to be included
